@@ -1,0 +1,9 @@
+/private.auto.tf
+/authorized_key.json
+/.terraform
+/modules/.terraform
+/terraform.tfstate
+/.terraform.lock.hcl
+/terraform.tfstate
+/terraform.tfstate.backup
+
