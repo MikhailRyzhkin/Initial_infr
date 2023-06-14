@@ -6,4 +6,6 @@
 /.terraform.lock.hcl
 /terraform.tfstate
 /terraform.tfstate.backup
-
+/key
+/private.variables.tf
+/modules/instance/private.variables.tf

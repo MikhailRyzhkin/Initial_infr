@@ -17,16 +17,16 @@ provider "yandex" {
   zone      = var.zone[0]
 }
 
-# Создаём сеть кластера kubernetes
-resource "yandex_vpc_network" "k8s-network" {
-  name = "k8s-network"
+# Указываем дефолтную сеть для сервисных инстансов
+resource "yandex_vpc_network" "default" {
+  name           = "default-srv"
 }
 
-# Создаём локальную сеть между нодами - ВМ
-resource "yandex_vpc_subnet" "k8s-subnet-1" {
-  name           = "k8s-subnet-1"
+# Создаём локальную сеть между нодами - сервисных инстансов
+resource "yandex_vpc_subnet" "srv-local" {
+  name           = "srv-local"
   zone           = var.zone[0]
-  network_id     = yandex_vpc_network.k8s-network.id
+  network_id     = yandex_vpc_network.default.id
   v4_cidr_blocks = ["192.168.10.0/24"]
 }
 
@@ -34,5 +34,6 @@ resource "yandex_vpc_subnet" "k8s-subnet-1" {
 # Создание сервисной ВМ и развертывание с неё kubernetes кластера согласно вложенного модуля
 module "kubernetes_cluster" {
   source        = "./modules/instance"
-  vpc_subnet_id = yandex_vpc_subnet.k8s-subnet-1.id
+  vpc_subnet_id = yandex_vpc_subnet.srv-local.id
+  
   }

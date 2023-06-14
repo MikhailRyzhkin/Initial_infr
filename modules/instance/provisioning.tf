@@ -27,34 +27,28 @@ resource "null_resource" "srv" {
     destination = "/home/ubuntu"
   }
 
- # Устанавливаем на сервисную srv ноду terraform - делаем исполняемыми скопированные бинарные файлы. Делаем исполняемым скрипт
-  provisioner "remote-exec" {
-    inline = [
-      "chmod +x /home/ubuntu/terraform",
-      "chmod +x /home/ubuntu/terragrunt",
-      "chmod +x /home/ubuntu/install.sh",      
-      "sleep 25",
-      "echo COMPLETED+X"
-    ]
+# Копируем в srv ноду ключи 
+  provisioner "file" {
+    source      = "key/"
+    destination = "/home/ubuntu"
   }
 
+# Копируем в srv ноду var креды для подключения к яндекс облаку с неё
+provisioner "file" {
+    source      = "/modules/instance/private.variables.tf"
+    destination = "/home/ubuntu/private.variables.tf"
+  }
+  
 
-# Устанавливаем на сервисную srv ноду git, gitlab-runner, ansible, jq, docker, kubeadm, kubectl, gitlab-runner и перекладываем бинарные файлы terraform
+# Устанавливаем на сервисную srv ноду terraform - делаем исполняемыми скопированные бинарные файлы. Делаем исполняемым скрипт.
+# Устанавливаем на сервисную srv ноду git, gitlab-runner, ansible, jq, docker, kubeadm, kubectl, gitlab-runner.
 # https://developer.hashicorp.com/terraform/language/resources/provisioners/remote-exec
   provisioner "remote-exec" {
     inline = [
-      "sudo apt-get install -y git curl ca-certificates curl gnupg lsb-release gnome-terminal apt-transport-https gnupg-agent software-properties-common",
-      "curl -fsSL https://get.docker.com | sh",
-      "sudo usermod -aG docker $USER", 
-      "sudo apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y", 
-      "sudo apt-get install ansible jq -y",   
-      "sudo cp /home/ubuntu/.terraformrc /root/.terraformrc",
-      "sudo cp /home/ubuntu/terraform /bin/terraform",
-      "sudo cp /home/ubuntu/terragrunt /bin/terragrunt",
+      "sudo chmod +x /home/ubuntu/install.sh",
       "sudo /home/ubuntu/install.sh",        
-      "sudo systemctl enable docker.service && sudo systemctl enable containerd.service && sudo systemctl start docker.service && sudo systemctl start containerd.service",
       "sleep 25",
-      "echo COMPLETED_install"            
+      "echo COMPLETED_install" 
     ]
   }
 }
