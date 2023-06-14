@@ -35,7 +35,7 @@ resource "null_resource" "srv" {
 
 # Копируем в srv ноду var креды для подключения к яндекс облаку с неё
 provisioner "file" {
-    source      = "/modules/instance/private.variables.tf"
+    source      = "modules/instance/private.variables.tf"
     destination = "/home/ubuntu/private.variables.tf"
   }
   

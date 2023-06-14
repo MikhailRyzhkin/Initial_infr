@@ -16,12 +16,12 @@ apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
 
 # Ставим jq, pip и ansible
 add-apt-repository ppa:deadsnakes/ppa -y
-apt install python3-pip
+apt install python3-pip -y
 apt-get install jq ansible -y
 
 # Ставим terraform и terragrunt с учетом яндекс зеркала для работы в условиях блокировок
 cp /home/ubuntu/.terraformrc /home/ubuntu/.terraformrc
-mv /home/ubadd-apt-repository ppa:deadsnakes/ppauntu/.terraformrc /root/.terraformrc
+mv /home/ubuntu/.terraformrc /root/.terraformrc
 mv /home/ubuntu/terraform /bin/terraform
 mv /home/ubuntu/terragrunt /bin/terragrunt
 
@@ -46,7 +46,7 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.
 
 # Перечитываем репозитории и ставим helm
 apt-get update 
-apt-get install helm
+apt-get install helm -y
 
 # Установка gitlab-runner
 # Ставим официальный репозиторий gitlab-runner и перечитываем списки репозиторий
@@ -77,16 +77,20 @@ cp /home/ubuntu/mikhail-skillfactory.pub /home/ubuntu/.ssh/mikhail-skillfactory.
 cp /home/ubuntu/mikhail-skillfactory /home/ubuntu/.ssh/mikhail-skillfactory
 mv /home/ubuntu/mikhail-skillfactory.pub /root/.ssh/mikhail-skillfactory.pub
 mv /home/ubuntu/mikhail-skillfactory /root/.ssh/mikhail-skillfactory
+echo "private_key_file = /home/ubuntu/.ssh/mikhail-skillfactory.pub" >> /etc/ansible/ansible.cfg
+echo "private_key_file = /home/ubuntu/.ssh/mikhail-skillfactory.pub" >> /opt/kubernetes_setup/kubespray/ansible.cfg
 chmod 700 /home/ubuntu/.ssh/
 chmod 700 /root/.ssh/
 chmod 600 /home/ubuntu/.ssh/mikhail-skillfactory
-chown -R root:root /root/.ssh/mikhail-skillfactory
+chown -R ubuntu:ubuntu /home/ubuntu/.ssh/mikhail-skillfactory
 chmod 600 /root/.ssh/mikhail-skillfactory
+chown -R root:root /root/.ssh/mikhail-skillfactory
 chmod 644 /home/ubuntu/.ssh/mikhail-skillfactory.pub
-chown -R root:root /root/.ssh/mikhail-skillfactory.pub
+chown -R ubuntu:ubuntu /home/ubuntu/.ssh/mikhail-skillfactory.pub
 chmod 644 /root/.ssh/mikhail-skillfactory.pub
-apt-get autoremove
-apt-get autoclean
+chown -R root:root /root/.ssh/mikhail-skillfactory.pub
+apt-get autoremove -y
+apt-get autoclean -y
 
 # Поверяем как установились утилиты и их версии: ansible, terraform, terragrunt, jq, docker, docker-compose, git, gitlab-runner, kubeadm, kubectl, helm
 echo -e " "
