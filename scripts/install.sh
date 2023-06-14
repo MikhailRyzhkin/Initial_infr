@@ -8,18 +8,21 @@ echo COMPLETED_skripts+X
 # Ставим предваритьельные пакеты и зависимости для дальнейших установок утилит, ставим git и синхронизируем время на ноде
 apt-get install -y git curl ca-certificates curl gnupg lsb-release gnome-terminal apt-transport-https gnupg-agent software-properties-common chrony tzdata
 timedatectl set-timezone Europe/Moscow && systemctl start chrony && systemctl enable chrony
+add-apt-repository ppa:deadsnakes/ppa -y
 
 # Ставим docker, docker compose
 curl -fsSL https://get.docker.com | sh
 usermod -aG docker $USER
 apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
 
-# Ставим pip, ansible и jq
-apt-get install pip ansible jq -y
+# Ставим jq, pip и ansible
+add-apt-repository ppa:deadsnakes/ppa -y
+apt install python3-pip
+apt-get install jq ansible -y
 
 # Ставим terraform и terragrunt с учетом яндекс зеркала для работы в условиях блокировок
 cp /home/ubuntu/.terraformrc /home/ubuntu/.terraformrc
-mv /home/ubuntu/.terraformrc /root/.terraformrc
+mv /home/ubadd-apt-repository ppa:deadsnakes/ppauntu/.terraformrc /root/.terraformrc
 mv /home/ubuntu/terraform /bin/terraform
 mv /home/ubuntu/terragrunt /bin/terragrunt
 
