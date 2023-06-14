@@ -8,7 +8,6 @@ echo COMPLETED_skripts+X
 # Ставим предваритьельные пакеты и зависимости для дальнейших установок утилит, ставим git и синхронизируем время на ноде
 apt-get install -y git curl ca-certificates curl gnupg lsb-release gnome-terminal apt-transport-https gnupg-agent software-properties-common chrony tzdata
 timedatectl set-timezone Europe/Moscow && systemctl start chrony && systemctl enable chrony
-add-apt-repository ppa:deadsnakes/ppa -y
 
 # Ставим docker, docker compose
 curl -fsSL https://get.docker.com | sh
