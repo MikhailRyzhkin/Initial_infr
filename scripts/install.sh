@@ -1,11 +1,17 @@
 #!/bin/bash
 
-# Устнавливаем terraform и terragrunt - делаем исполняемыми бинарные файлы
+# Перечитываем пакеты и обновляем ОС
+apt-get update && apt-get upgrade -y
+
+# Устнавливаем terraform и terragrunt с учетом яндекс зеркала для работы в условиях блокировок - делаем исполняемыми бинарные файлы
 chmod +x /home/ubuntu/terraform      
 chmod +x /home/ubuntu/terragrunt
-echo COMPLETED_skripts+X
+mv /home/ubuntu/terraform /bin/terraform
+mv /home/ubuntu/terragrunt /bin/terragrunt
+cp /home/ubuntu/.terraformrc /home/ubuntu/.terraformrc
+mv /home/ubuntu/.terraformrc /root/.terraformrc
 
-# Ставим предваритьельные пакеты и зависимости для дальнейших установок утилит, ставим git и синхронизируем время на ноде
+# Ставим предварительные пакеты и зависимости для дальнейших установок утилит, ставим git и синхронизируем время на сервисной ноде
 apt-get install -y git curl ca-certificates curl gnupg lsb-release gnome-terminal apt-transport-https gnupg-agent software-properties-common chrony tzdata
 timedatectl set-timezone Europe/Moscow && systemctl start chrony && systemctl enable chrony
 
@@ -13,23 +19,17 @@ timedatectl set-timezone Europe/Moscow && systemctl start chrony && systemctl en
 curl -fsSL https://get.docker.com | sh
 usermod -aG docker $USER
 apt-get install docker-ce docker-ce-cli containerd.io docker-compose-plugin -y
+systemctl enable docker.service && systemctl enable containerd.service && systemctl start docker.service && sudo systemctl start containerd.service
 
 # Ставим jq, pip и ansible
 add-apt-repository ppa:deadsnakes/ppa -y
 apt install python3-pip -y
 apt-get install jq ansible -y
 
-# Ставим terraform и terragrunt с учетом яндекс зеркала для работы в условиях блокировок
-cp /home/ubuntu/.terraformrc /home/ubuntu/.terraformrc
-mv /home/ubuntu/.terraformrc /root/.terraformrc
-mv /home/ubuntu/terraform /bin/terraform
-mv /home/ubuntu/terragrunt /bin/terragrunt
-
 # Установка kubeadm kubectl
-# Ставим публичный ключ Google Cloud
+# Ставим публичный ключ Google Cloud.
+# Добавляем Kubernetes репозиторий и перечитываем их:
 curl -fsSL https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-archive-keyring.gpg
-
-#Добавляем Kubernetes репозиторий и перечитываем их:
 echo "deb [signed-by=/etc/apt/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list 
 apt-get update
 
@@ -38,10 +38,8 @@ apt-get install -y kubeadm kubectl
 apt-mark hold kubeadm kubectl
 
 # Установка helm
-# Ставим ключ
+# Ставим ключ и репозиторий:
 curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | sudo tee /usr/share/keyrings/helm.gpg > /dev/null
-
-# Ставим репозиторий
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
 
 # Перечитываем репозитории и ставим helm
@@ -56,17 +54,18 @@ apt-get update
 # Установка gitlab-runner
 apt-get install gitlab-runner -y
 
-systemctl enable docker.service && systemctl enable containerd.service && systemctl start docker.service && sudo systemctl start containerd.service
-
 echo -e "Сервисная нода готова к управлению кластером k8s. Приступаем к подготовке к развёртывнию кластера."
 sleep 35
 
+# Клонируем репозитории для установки k8s кластера с помощью kubespray
 cd /opt/
 git clone https://github.com/MikhailRyzhkin/kubernetes_setup.git
 cd kubernetes_setup/
 git clone https://github.com/MikhailRyzhkin/kubespray
 pip3 install -r /opt/kubernetes_setup/kubespray/requirements-2.9.txt
 sleep 25
+
+# Даём нужные разрешения, подкладываем ключи
 chmod +x /opt/kubernetes_setup/cluster_install.sh
 chmod +x /opt/kubernetes_setup/cluster_destroy.sh
 chmod +x /opt/kubernetes_setup/terraform/generate_credentials_velero.sh
