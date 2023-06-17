@@ -51,8 +51,9 @@ apt-get install helm -y
 curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | sudo bash 
 apt-get update
 
-# Установка gitlab-runner
+# Установка и запуск gitlab-runner
 apt-get install gitlab-runner -y
+systemctl enable gitlab-runner --now
 
 echo -e "Сервисная нода готова к управлению кластером k8s. Приступаем к подготовке к развёртывнию кластера."
 sleep 35
