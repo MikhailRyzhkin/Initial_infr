@@ -49,8 +49,6 @@
 
 ![Deploy_infr-2-1-2-3](https://github.com/MikhailRyzhkin/Initial_infr/assets/69116076/b592338b-ecb0-4cc6-ac15-c00a4e54b610)
 
-![Снимок экрана_2023-07-02_13-40-41](https://github.com/MikhailRyzhkin/Initial_infr/assets/69116076/9d165f38-16f7-4ad0-a9d3-ed03de3b9eb5)
-
 ![diplom-развертывание k8s](https://github.com/MikhailRyzhkin/Initial_infr/assets/69116076/6feff359-f08e-4063-831f-b7548fa04b35)
 
 ![diplom-развертывание k8s-1](https://github.com/MikhailRyzhkin/Initial_infr/assets/69116076/d8c3ece4-7d5f-4b8c-be11-fabdaded5c02)
