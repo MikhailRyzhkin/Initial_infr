@@ -55,7 +55,8 @@
 
 ![diplom-развертывание k8s-1](https://github.com/MikhailRyzhkin/Initial_infr/assets/69116076/d8c3ece4-7d5f-4b8c-be11-fabdaded5c02)
 
-![diplom-развертывание k8s-2](https://github.com/MikhailRyzhkin/Initial_infr/assets/69116076/4b03d9ab-42ba-461e-adc3-1210c4b1d541)
+![ВМ диплома](https://github.com/MikhailRyzhkin/Initial_infr/assets/69116076/051ce0db-ad6c-460d-b838-5a417ebd2156)
+
 
 
 
